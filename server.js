@@ -12,6 +12,8 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     age INTEGER,
+    gender TEXT,
+    number TEXT,
     email TEXT
 )`, (err) => {
     if (err) {
@@ -21,13 +23,14 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
     }
 });
 
-app.use(bodyParser.json()); // Use bodyParser.json() middleware instead
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/submit', (req, res) => {
-    const { name, age, email } = req.body;
-    console.log('Received data:', req.body); // Log the received data
-    const sql = `INSERT INTO users (name, age, email) VALUES (?, ?, ?)`;
-    db.run(sql, [name, age, email], (err) => {
+    const { name, age, gender, number, email } = req.body;
+    console.log('Received data:', req.body);
+    const sql = `INSERT INTO users (name, age, gender, number, email) VALUES (?, ?, ?, ?, ?)`;
+    db.run(sql, [name, age, gender, number, email], (err) => {
         if (err) {
             console.error('Error inserting record:', err.message);
             res.status(500).send('Error inserting record');
